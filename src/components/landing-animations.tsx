@@ -1,6 +1,17 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from "react";
 
 /* ================================================================
    ParallaxSection
@@ -142,6 +153,78 @@ export function FloatingCode() {
    gradient follows the cursor, using theme accent colors.
    ================================================================ */
 
+type GlowCardGroupContextValue = {
+  activeId: string | null;
+  setActiveId: (id: string | null) => void;
+  registerCard: (id: string, el: HTMLDivElement | null) => void;
+  updateGlowPosition: (id: string, clientX: number, clientY: number) => void;
+};
+
+const GlowCardGroupContext =
+  createContext<GlowCardGroupContextValue | null>(null);
+
+function setGlowPosition(el: HTMLDivElement, clientX: number, clientY: number) {
+  const rect = el.getBoundingClientRect();
+  const x = clientX - rect.left;
+  const y = clientY - rect.top;
+  el.style.setProperty("--glow-x", `${x}px`);
+  el.style.setProperty("--glow-y", `${y}px`);
+}
+
+export function GlowCardGroup({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const cardsRef = useRef(new Map<string, HTMLDivElement>());
+
+  const registerCard = useCallback(
+    (id: string, el: HTMLDivElement | null) => {
+      if (el) {
+        cardsRef.current.set(id, el);
+      } else {
+        cardsRef.current.delete(id);
+      }
+    },
+    []
+  );
+
+  const updateGlowPosition = useCallback(
+    (id: string, clientX: number, clientY: number) => {
+      const el = cardsRef.current.get(id);
+      if (!el) return;
+
+      setGlowPosition(el, clientX, clientY);
+    },
+    []
+  );
+
+  const value = useMemo(
+    () => ({ activeId, setActiveId, registerCard, updateGlowPosition }),
+    [activeId, registerCard, updateGlowPosition]
+  );
+
+  const handlePointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (!activeId) return;
+    updateGlowPosition(activeId, e.clientX, e.clientY);
+  };
+
+  return (
+    <GlowCardGroupContext.Provider value={value}>
+      <div
+        className={className}
+        onPointerLeave={() => setActiveId(null)}
+        onPointerMove={handlePointerMove}
+      >
+        {children}
+      </div>
+    </GlowCardGroupContext.Provider>
+  );
+}
+
 export function GlowCard({
   children,
   className = "",
@@ -152,31 +235,45 @@ export function GlowCard({
   glowColor?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const group = useContext(GlowCardGroupContext);
+  const cardId = useId();
+  const isActive = group?.activeId === cardId;
+  const registerCard = group?.registerCard;
 
   useEffect(() => {
+    if (!registerCard) return;
+
     const el = ref.current;
     if (!el) return;
 
-    const handleMove = (e: PointerEvent) => {
-      const rect = el.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      el.style.setProperty("--glow-x", `${x}px`);
-      el.style.setProperty("--glow-y", `${y}px`);
-    };
+    registerCard(cardId, el);
+    return () => registerCard(cardId, null);
+  }, [cardId, registerCard]);
 
-    el.addEventListener("pointermove", handleMove);
-    return () => el.removeEventListener("pointermove", handleMove);
-  }, []);
+  const handlePointerEnter = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (!group) return;
+
+    group.setActiveId(cardId);
+    group.updateGlowPosition(cardId, e.clientX, e.clientY);
+  };
+
+  const handlePointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (group) return;
+
+    setGlowPosition(e.currentTarget, e.clientX, e.clientY);
+  };
 
   return (
     <div
       ref={ref}
-      className={`group relative overflow-hidden rounded-xl border border-border bg-card transition-[border-color,box-shadow] duration-200 ease-[var(--ease-out)] hover:border-[color-mix(in_srgb,var(--primary)_40%,var(--border))] hover:shadow-lg ${className}`}
+      data-active={isActive ? "true" : undefined}
+      onPointerEnter={handlePointerEnter}
+      onPointerMove={handlePointerMove}
+      className={`group relative overflow-hidden rounded-xl border border-border bg-card transition-[border-color,box-shadow] duration-200 ease-[var(--ease-out)] hover:border-[color-mix(in_srgb,var(--primary)_40%,var(--border))] hover:shadow-lg data-[active=true]:border-[color-mix(in_srgb,var(--primary)_40%,var(--border))] data-[active=true]:shadow-lg ${className}`}
     >
       {/* Mouse-tracking glow */}
       <div
-        className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-data-[active=true]:opacity-100"
         style={{
           background: `radial-gradient(320px circle at var(--glow-x, 50%) var(--glow-y, 50%), color-mix(in srgb, ${glowColor} 12%, transparent), transparent 70%)`,
         }}

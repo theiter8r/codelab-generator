@@ -19,10 +19,12 @@ import {
   ChevronDown,
   ChevronUp,
   Layers,
+  Library,
   Plus,
   Trash2,
   Workflow,
 } from "lucide-react";
+import { saveSimulation } from "@/lib/actions/simulations";
 import { nodeTypes, type SimNodeData } from "./nodes";
 import { specToFlowEdges, specToFlowNodes } from "./simulation-canvas";
 import { Modal } from "@/components/ui/modal";
@@ -84,6 +86,7 @@ function BuilderInner({
   const [selNode, setSelNode] = useState<string | null>(null);
   const [selEdge, setSelEdge] = useState<string | null>(null);
   const [selStage, setSelStage] = useState<string | null>(null);
+  const [savingLib, setSavingLib] = useState(false);
 
   // Reflect the selected stage's membership as active/dimmed styling.
   useEffect(() => {
@@ -234,8 +237,8 @@ function BuilderInner({
     });
   }
 
-  function save() {
-    const spec: SimulationSpec = {
+  function buildSpec(): SimulationSpec {
+    return {
       version: 1,
       title: initialSpec.title,
       nodes: nodes.map((n) => {
@@ -257,7 +260,27 @@ function BuilderInner({
       })),
       stages,
     };
-    onSave(spec);
+  }
+
+  function save() {
+    onSave(buildSpec());
+  }
+
+  async function saveToLibrary() {
+    if (nodes.length === 0) {
+      alert("Add at least one node before saving to the library.");
+      return;
+    }
+    const name = window.prompt("Save this simulation to your library as:");
+    if (!name?.trim()) return;
+    setSavingLib(true);
+    const res = await saveSimulation({ name: name.trim(), spec: buildSpec() });
+    setSavingLib(false);
+    if ("error" in res) {
+      alert(`Could not save: ${res.error}`);
+    } else {
+      alert(`Saved “${name.trim()}” to your simulation library.`);
+    }
   }
 
   const selectedNode = selNode ? nodes.find((n) => n.id === selNode) : null;
@@ -281,6 +304,15 @@ function BuilderInner({
         <div className="ml-auto flex items-center gap-2">
           <Button variant="ghost" size="sm" onClick={onClose}>
             Cancel
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={saveToLibrary}
+            disabled={savingLib}
+            title="Save this simulation to your reusable library"
+          >
+            <Library className="size-4" /> Save to library
           </Button>
           <Button size="sm" onClick={save}>
             Save simulation

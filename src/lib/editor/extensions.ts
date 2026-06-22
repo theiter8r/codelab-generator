@@ -25,6 +25,7 @@ export function getExtensions({ editable }: { editable: boolean }): AnyExtension
   return [
     StarterKit.configure({
       codeBlock: false, // replaced by CodeBlockLowlight below
+      link: false, // configured separately below with custom options
     }),
     CodeBlock,
     Simulation,
