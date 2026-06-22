@@ -33,6 +33,7 @@ run the migrations in order:
 3. `supabase/migrations/0003_step_templates.sql` — reusable step-content templates
 4. `supabase/migrations/0004_public_profile.sql` — aggregated activity/completed-lab functions for public profiles
 5. `supabase/migrations/0005_modules_hints.sql` — step modules, per-step hints, and the learner hints preference
+6. `supabase/migrations/0006_simulation_library.sql` — the reusable simulation library (`simulations` table)
 
 ### 2. Configure OAuth (optional but recommended)
 
@@ -86,6 +87,7 @@ Reload the app — you'll now see the **Author** link and can create labs at `/a
 | Reusable step templates | `src/app/admin/templates/**` |
 | Image pool + template pickers (editor) | `src/components/editor/media-library.tsx`, `template-picker.tsx` |
 | Interactive simulations (Tiptap node + builder/player) | `src/lib/simulation/*`, `src/components/simulation/*`, `src/lib/editor/simulation-extension.ts` |
+| Reusable simulation library (save once, insert anywhere) | `src/lib/actions/simulations.ts`, `src/components/editor/simulation-picker.tsx` |
 | Auth | `src/app/(auth)/login`, `src/app/auth/callback`, `src/app/auth/confirm` |
 | Supabase clients / session proxy | `src/lib/supabase/*`, `src/proxy.ts` |
 | Data access | `src/lib/queries.ts` |

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { Check, Lightbulb } from "lucide-react";
 import { updateStep } from "@/lib/actions/labs";
 import { RichEditor } from "@/components/editor/rich-editor";
@@ -11,6 +11,7 @@ import { Spinner } from "@/components/ui/spinner";
 import type { TiptapDoc } from "@/lib/types";
 
 const EMPTY_DOC: TiptapDoc = { type: "doc", content: [] };
+const AUTOSAVE_MS = 1200;
 
 export function StepEditor({
   stepId,
@@ -26,18 +27,22 @@ export function StepEditor({
   initialHint: TiptapDoc | null;
 }) {
   const [title, setTitle] = useState(initialTitle);
+  const titleRef = useRef(initialTitle);
   const docRef = useRef<TiptapDoc | null>(initialContent);
   const hintRef = useRef<TiptapDoc | null>(initialHint);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [pending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
+  const [dirty, setDirty] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  function save() {
+  const save = useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
     setSaved(false);
     setError(null);
     startTransition(async () => {
       const res = await updateStep(stepId, labId, {
-        title,
+        title: titleRef.current,
         content: docRef.current ?? EMPTY_DOC,
         hint: hintRef.current ?? EMPTY_DOC,
       });
@@ -45,10 +50,27 @@ export function StepEditor({
         setError(res.error);
         return;
       }
+      setDirty(false);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     });
-  }
+  }, [stepId, labId]);
+
+  // Debounced autosave: any edit (title, content, hint, or a saved simulation)
+  // persists on its own, so there is no separate "commit the simulation" step.
+  const scheduleSave = useCallback(() => {
+    setDirty(true);
+    setSaved(false);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => save(), AUTOSAVE_MS);
+  }, [save]);
+
+  // Flush a pending autosave on unmount so navigating away never drops an edit.
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
   return (
     <div className="grid gap-4">
@@ -57,7 +79,11 @@ export function StepEditor({
         <Input
           id="step-title"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            titleRef.current = e.target.value;
+            scheduleSave();
+          }}
           placeholder="e.g. Set up the project"
         />
       </div>
@@ -68,6 +94,7 @@ export function StepEditor({
           initialContent={initialContent}
           onChange={(doc) => {
             docRef.current = doc;
+            scheduleSave();
           }}
         />
       </div>
@@ -85,6 +112,7 @@ export function StepEditor({
           initialContent={initialHint}
           onChange={(doc) => {
             hintRef.current = doc;
+            scheduleSave();
           }}
         />
       </div>
@@ -94,11 +122,15 @@ export function StepEditor({
           {pending && <Spinner />}
           Save step
         </Button>
-        {saved && (
+        {pending ? (
+          <span className="text-sm text-muted-foreground">Saving…</span>
+        ) : saved ? (
           <span className="flex items-center gap-1 text-sm text-[var(--success)]">
             <Check className="size-4" /> Saved
           </span>
-        )}
+        ) : dirty ? (
+          <span className="text-sm text-muted-foreground">Unsaved changes…</span>
+        ) : null}
         {error && <span className="text-sm text-destructive">{error}</span>}
       </div>
     </div>

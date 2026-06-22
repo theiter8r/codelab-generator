@@ -10,6 +10,7 @@ import {
   ImageIcon,
   Italic,
   LayoutTemplate,
+  Library,
   Link2,
   List,
   ListOrdered,
@@ -23,6 +24,7 @@ import { useState } from "react";
 import { getExtensions } from "@/lib/editor/extensions";
 import { MediaLibrary } from "@/components/editor/media-library";
 import { TemplatePicker } from "@/components/editor/template-picker";
+import { SimulationPicker } from "@/components/editor/simulation-picker";
 import { createTemplate } from "@/lib/actions/templates";
 import { cn } from "@/lib/utils";
 import type { TiptapDoc } from "@/lib/types";
@@ -36,6 +38,7 @@ export function RichEditor({
 }) {
   const [mediaOpen, setMediaOpen] = useState(false);
   const [templatesOpen, setTemplatesOpen] = useState(false);
+  const [simLibOpen, setSimLibOpen] = useState(false);
   const [savingTemplate, setSavingTemplate] = useState(false);
 
   const editor = useEditor({
@@ -80,6 +83,7 @@ export function RichEditor({
         savingTemplate={savingTemplate}
         onPickImage={() => setMediaOpen(true)}
         onPickTemplate={() => setTemplatesOpen(true)}
+        onPickSimulation={() => setSimLibOpen(true)}
         onSaveTemplate={saveAsTemplate}
       />
       <EditorContent editor={editor} />
@@ -96,6 +100,11 @@ export function RichEditor({
           if (content) editor.chain().focus().insertContent(content).run();
         }}
       />
+      <SimulationPicker
+        open={simLibOpen}
+        onClose={() => setSimLibOpen(false)}
+        onInsert={(spec) => editor.chain().focus().insertSimulation(spec).run()}
+      />
     </div>
   );
 }
@@ -105,12 +114,14 @@ function Toolbar({
   savingTemplate,
   onPickImage,
   onPickTemplate,
+  onPickSimulation,
   onSaveTemplate,
 }: {
   editor: Editor;
   savingTemplate: boolean;
   onPickImage: () => void;
   onPickTemplate: () => void;
+  onPickSimulation: () => void;
   onSaveTemplate: () => void;
 }) {
   function setLink() {
@@ -167,6 +178,9 @@ function Toolbar({
         label="Insert simulation"
       >
         <Workflow className="size-4" />
+      </Btn>
+      <Btn onClick={onPickSimulation} label="Insert simulation from library">
+        <Library className="size-4" />
       </Btn>
       <Divider />
       <Btn onClick={onPickTemplate} label="Insert template">

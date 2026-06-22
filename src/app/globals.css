@@ -141,7 +141,7 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-gilroy);
   --font-mono: var(--font-geist-mono);
 
   --ease-out: var(--ease-out);

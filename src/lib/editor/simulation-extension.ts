@@ -1,13 +1,16 @@
 import { Node, mergeAttributes } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import { SimulationView } from "@/components/editor/simulation-view";
-import { createEmptySpec } from "@/lib/simulation/types";
+import { createEmptySpec, type SimulationSpec } from "@/lib/simulation/types";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     simulation: {
-      /** Insert an empty simulation block (then opened in the builder). */
-      insertSimulation: () => ReturnType;
+      /**
+       * Insert a simulation block. With no argument it starts empty (then opened
+       * in the builder); pass a spec to insert a saved library simulation.
+       */
+      insertSimulation: (spec?: SimulationSpec) => ReturnType;
     };
   }
 }
@@ -59,11 +62,11 @@ export const Simulation = Node.create({
   addCommands() {
     return {
       insertSimulation:
-        () =>
+        (spec) =>
         ({ commands }) =>
           commands.insertContent({
             type: this.name,
-            attrs: { spec: createEmptySpec() },
+            attrs: { spec: spec ?? createEmptySpec() },
           }),
     };
   },

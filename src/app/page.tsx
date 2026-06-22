@@ -22,6 +22,7 @@ import {
   ParallaxSection,
   FloatingCode,
   GlowCard,
+  GlowCardGroup,
   GradientText,
 } from "@/components/landing-animations";
 
@@ -248,7 +249,7 @@ export default async function HomePage() {
           </div>
         </ParallaxSection>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <GlowCardGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((f, i) => (
             <ParallaxSection key={f.title} delay={i * 60}>
               <GlowCard glowColor={f.glow} className="h-full">
@@ -266,7 +267,7 @@ export default async function HomePage() {
               </GlowCard>
             </ParallaxSection>
           ))}
-        </div>
+        </GlowCardGroup>
       </section>
 
       {/* ════════════════════════════════════════════════════════
@@ -336,7 +337,7 @@ export default async function HomePage() {
           </div>
         </ParallaxSection>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <GlowCardGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {TECH_STACK.map((tech, i) => (
             <ParallaxSection key={tech.name} delay={i * 60}>
               <GlowCard glowColor={tech.glow} className="h-full">
@@ -352,7 +353,7 @@ export default async function HomePage() {
               </GlowCard>
             </ParallaxSection>
           ))}
-        </div>
+        </GlowCardGroup>
       </section>
 
       {/* ════════════════════════════════════════════════════════

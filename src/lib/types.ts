@@ -84,6 +84,17 @@ export interface StepTemplate {
   updated_at: string;
 }
 
+/** A named, reusable simulation the admin can save once and insert into any step. */
+export interface SavedSimulation {
+  id: string;
+  author_id: string;
+  name: string;
+  description: string | null;
+  spec: unknown; // a SimulationSpec; parsed with parseSpec() at the use site
+  created_at: string;
+  updated_at: string;
+}
+
 /** An image in the `lab-assets` storage pool, resolved to a public URL. */
 export interface MediaAsset {
   name: string;
