@@ -503,6 +503,39 @@ body {
   color: #AAA0FA;
 }
 
+/* ---- React Flow (simulation canvas) theme overrides ---- */
+.react-flow {
+  background: transparent;
+}
+.react-flow__controls {
+  box-shadow: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.react-flow__controls-button {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+.react-flow__controls-button:hover {
+  background: var(--muted);
+}
+.react-flow__controls-button svg {
+  fill: var(--muted-foreground);
+}
+.react-flow__attribution {
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  color: var(--muted-foreground);
+  border-radius: 4px;
+}
+.react-flow__edge-text {
+  fill: var(--foreground);
+}
+.react-flow__handle {
+  border-color: var(--border);
+  background: var(--muted-foreground);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -8,6 +8,9 @@ through them at their own pace with progress tracking. Built with **Next.js 16
   rich WYSIWYG editor.
 - **Anyone** can sign up to read along and track their progress (per-step
   completion + resume where they left off).
+- Embed **interactive simulations** in any step — animated architecture
+  diagrams and process walkthroughs authored with a visual drag-and-connect
+  builder and played back with guided stages + free pan/zoom.
 - Cursor-inspired light/dark theme.
 
 ## Stack
@@ -15,6 +18,7 @@ through them at their own pace with progress tracking. Built with **Next.js 16
 - Next.js 16 (App Router, Server Components, Server Actions)
 - Supabase: Postgres + Row Level Security, Auth (email + GitHub/Google OAuth), Storage
 - Tailwind CSS v4, Radix primitives, Tiptap editor (with syntax-highlighted code blocks)
+- React Flow (`@xyflow/react`) for the interactive simulation canvas
 - `next-themes`, `zod`, `lowlight`
 
 ## Getting started
@@ -81,6 +85,7 @@ Reload the app — you'll now see the **Author** link and can create labs at `/a
 | Admin authoring | `src/app/admin/**` |
 | Reusable step templates | `src/app/admin/templates/**` |
 | Image pool + template pickers (editor) | `src/components/editor/media-library.tsx`, `template-picker.tsx` |
+| Interactive simulations (Tiptap node + builder/player) | `src/lib/simulation/*`, `src/components/simulation/*`, `src/lib/editor/simulation-extension.ts` |
 | Auth | `src/app/(auth)/login`, `src/app/auth/callback`, `src/app/auth/confirm` |
 | Supabase clients / session proxy | `src/lib/supabase/*`, `src/proxy.ts` |
 | Data access | `src/lib/queries.ts` |

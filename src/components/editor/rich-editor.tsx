@@ -17,6 +17,7 @@ import {
   Redo2,
   Strikethrough,
   Undo2,
+  Workflow,
 } from "lucide-react";
 import { useState } from "react";
 import { getExtensions } from "@/lib/editor/extensions";
@@ -160,6 +161,12 @@ function Toolbar({
       </Btn>
       <Btn onClick={onPickImage} label="Insert image from pool">
         <ImageIcon className="size-4" />
+      </Btn>
+      <Btn
+        onClick={() => editor.chain().focus().insertSimulation().run()}
+        label="Insert simulation"
+      >
+        <Workflow className="size-4" />
       </Btn>
       <Divider />
       <Btn onClick={onPickTemplate} label="Insert template">

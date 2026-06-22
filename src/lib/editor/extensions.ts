@@ -7,6 +7,7 @@ import { ReactNodeViewRenderer } from "@tiptap/react";
 import { common, createLowlight } from "lowlight";
 import type { AnyExtension } from "@tiptap/core";
 import { CodeBlockView } from "@/components/editor/code-block-view";
+import { Simulation } from "@/lib/editor/simulation-extension";
 
 export const lowlight = createLowlight(common);
 
@@ -26,6 +27,7 @@ export function getExtensions({ editable }: { editable: boolean }): AnyExtension
       codeBlock: false, // replaced by CodeBlockLowlight below
     }),
     CodeBlock,
+    Simulation,
     Image.configure({ HTMLAttributes: { class: "rounded-lg border border-border" } }),
     Link.configure({
       openOnClick: !editable,
