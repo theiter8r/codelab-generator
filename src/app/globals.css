@@ -1,0 +1,515 @@
+@import "tailwindcss";
+
+/* Class-based dark mode driven by next-themes (html.dark) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  Theme derived from MohdZaid.vscode-cursor-theme (Cursor Dark).
+  Accent colors pulled directly from the syntax-highlighting palette:
+    Teal #82D2CE · Purple #AAA0FA · Orange #EFB080
+    Pink #E394DC · Green #A8CC7C · Gold #F8C762
+*/
+:root {
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+
+  --muted: #f4f4f5;
+  --muted-foreground: #6b7280;
+
+  --subtle: #fafafa;
+
+  --border: #e7e7e9;
+  --input: #e7e7e9;
+  --ring: #81A1C1;
+
+  --primary: #5a7fa3;
+  --primary-foreground: #ffffff;
+
+  --secondary: #f4f4f5;
+  --secondary-foreground: #1a1a1a;
+
+  --accent: #eef5f4;
+  --accent-foreground: #1a3a38;
+
+  --destructive: #c22e4e;
+  --destructive-foreground: #ffffff;
+
+  --success: #2f8a56;
+  --warning: #c47c2a;
+
+  /* Cursor theme accent palette – light mode tints */
+  --accent-teal: #4aaca6;
+  --accent-purple: #7a6ee0;
+  --accent-orange: #c48050;
+  --accent-pink: #b86aae;
+  --accent-green: #6a9a48;
+  --accent-gold: #c49a3a;
+
+  --radius: 0.625rem;
+
+  /* Strong custom easing curves (emil-design-eng) */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.dark {
+  /* Cursor Dark editor chrome */
+  --background: #181818;
+  --foreground: #E4E4E4;
+
+  --card: #1c1c1c;
+  --card-foreground: #E4E4E4;
+
+  --popover: #141414;
+  --popover-foreground: #E4E4E4;
+
+  --muted: #262626;
+  --muted-foreground: #a0a0a5;
+
+  --subtle: #1c1c1c;
+
+  /* Cursor uses very subtle white-alpha borders */
+  --border: #2e2e30;
+  --input: #2f2f31;
+  --ring: #81A1C1;
+
+  /* Nord-inspired button blue */
+  --primary: #81A1C1;
+  --primary-foreground: #141414;
+
+  --secondary: #262626;
+  --secondary-foreground: #E4E4E4;
+
+  --accent: #1a2a3a;
+  --accent-foreground: #c7dbff;
+
+  --destructive: #E34671;
+  --destructive-foreground: #1a0b0c;
+
+  --success: #3FA266;
+  --warning: #F1B467;
+
+  /* Cursor theme syntax accent palette */
+  --accent-teal: #82D2CE;
+  --accent-purple: #AAA0FA;
+  --accent-orange: #EFB080;
+  --accent-pink: #E394DC;
+  --accent-green: #A8CC7C;
+  --accent-gold: #F8C762;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-subtle: var(--subtle);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+
+  --color-accent-teal: var(--accent-teal);
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-orange: var(--accent-orange);
+  --color-accent-pink: var(--accent-pink);
+  --color-accent-green: var(--accent-green);
+  --color-accent-gold: var(--accent-gold);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --ease-out: var(--ease-out);
+  --ease-in-out: var(--ease-in-out);
+  --ease-drawer: var(--ease-drawer);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--primary) 28%, transparent);
+}
+
+/* Focus-visible ring used across interactive primitives */
+:focus-visible {
+  outline: none;
+}
+
+/* Thin Cursor-like scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+  background-clip: content-box;
+}
+
+/* ================================================================
+   ENTRANCE ANIMATIONS
+   ================================================================ */
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 360ms var(--ease-out) both;
+}
+
+/* Origin-aware popover/menu entrance — scale from 0.96, never 0 */
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes menu-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+/* Plain opacity fade — used for modal backdrops where translate would show a gap */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Staggered children: set --i on each item */
+.stagger > * {
+  animation: fade-up 340ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+
+/* ================================================================
+   PARALLAX / SCROLL-DRIVEN ANIMATIONS
+   ================================================================ */
+
+/* Floating code decoration in hero */
+@keyframes parallax-float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-8px) rotate(0.5deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(-0.3deg);
+  }
+  75% {
+    transform: translateY(-10px) rotate(0.2deg);
+  }
+}
+
+.animate-float {
+  animation: parallax-float 6s var(--ease-in-out) infinite;
+}
+
+/* Pulsing glow for decorative elements */
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+.animate-glow {
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+/* Gradient text shimmer */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-text {
+  background-size: 200% 200%;
+  animation: gradient-shift 6s ease infinite;
+}
+
+/* Scroll-reveal: CSS-only for supporting browsers */
+@keyframes scroll-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+}
+
+@keyframes scroll-reveal-scale {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    .scroll-reveal {
+      animation: scroll-reveal auto linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+
+    .scroll-reveal-scale {
+      animation: scroll-reveal-scale auto linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+  }
+}
+
+/* JS fallback: these classes are toggled by IntersectionObserver */
+.reveal-hidden {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out);
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger delay helpers for JS-based reveal */
+.reveal-delay-1 { transition-delay: 60ms; }
+.reveal-delay-2 { transition-delay: 120ms; }
+.reveal-delay-3 { transition-delay: 180ms; }
+.reveal-delay-4 { transition-delay: 240ms; }
+.reveal-delay-5 { transition-delay: 300ms; }
+
+/* ================================================================
+   PROSE CONTENT (Tiptap output)
+   ================================================================ */
+
+.prose-content {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--foreground);
+}
+.prose-content > * + * {
+  margin-top: 0.9em;
+}
+.prose-content h1 {
+  font-size: 1.6rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  margin-top: 1.4em;
+}
+.prose-content h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin-top: 1.3em;
+}
+.prose-content h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1.2em;
+}
+.prose-content p {
+  color: color-mix(in srgb, var(--foreground) 92%, transparent);
+}
+.prose-content a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-content ul,
+.prose-content ol {
+  padding-left: 1.4em;
+}
+.prose-content ul {
+  list-style: disc;
+}
+.prose-content ol {
+  list-style: decimal;
+}
+.prose-content li::marker {
+  color: var(--muted-foreground);
+}
+.prose-content blockquote {
+  border-left: 3px solid var(--border);
+  padding-left: 1em;
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+/* Inline code (not fenced blocks) */
+.prose-content :not(pre) > code {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.85em;
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.12em 0.35em;
+}
+.prose-content pre {
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+.prose-content img {
+  border-radius: var(--radius);
+  max-width: 100%;
+}
+.prose-content .is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--muted-foreground);
+}
+
+/* ---- highlight.js token palette (Cursor Dark theme-aware) ---- */
+.hljs-comment,
+.hljs-quote {
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-type {
+  color: #c678dd;
+}
+.dark .hljs-keyword,
+.dark .hljs-selector-tag,
+.dark .hljs-literal,
+.dark .hljs-type {
+  color: #82D2CE;
+}
+.hljs-string,
+.hljs-regexp,
+.hljs-addition {
+  color: #50a14f;
+}
+.dark .hljs-string,
+.dark .hljs-regexp,
+.dark .hljs-addition {
+  color: #E394DC;
+}
+.hljs-number,
+.hljs-built_in,
+.hljs-attr {
+  color: #b76b01;
+}
+.dark .hljs-number,
+.dark .hljs-built_in,
+.dark .hljs-attr {
+  color: #EBC88D;
+}
+.hljs-function,
+.hljs-title,
+.hljs-section {
+  color: #4078f2;
+}
+.dark .hljs-function,
+.dark .hljs-title,
+.dark .hljs-section {
+  color: #EFB080;
+}
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name {
+  color: #e45649;
+}
+.dark .hljs-variable,
+.dark .hljs-template-variable,
+.dark .hljs-tag,
+.dark .hljs-name {
+  color: #AAA0FA;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
